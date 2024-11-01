@@ -1,0 +1,9 @@
+/* NOTE: Caso necessário adicionar qualquer estilização extra, colocar aqui */
+body {
+  /* font-family: "Open Sans", sans-serif; */
+  margin: 0;
+}
+
+* {
+  color: black;
+}

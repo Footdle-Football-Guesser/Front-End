@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 export const HomePage = () => {
   return (
@@ -7,11 +7,10 @@ export const HomePage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundImage: "url(/src/assets/brasileirao-wallpaper.jpg)",
-        backgroundRepeat: "no-repeat",
+        gap: "8px",
       }}
     >
-      <h1>Footdle</h1>
+      <Typography variant="h3">Footdle</Typography>
       <TextField variant="outlined" placeholder="Digite o nome do jogador" />
     </Box>
   );
