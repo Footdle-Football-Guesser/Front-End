@@ -7,7 +7,7 @@ function App() {
     //NOTE: 'Box' pai de todas
     <Box
       sx={{
-        height: "100vh",
+        height: "100%",
       }}
     >
       <NavBar />
@@ -16,12 +16,12 @@ function App() {
         sx={{
           height: "100%",
           width: "100%",
-          paddingTop: "10vh",
-          backgroundImage: `url(/src/assets/cbf-wallpaper.jpg)`,
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
-          backgroundAttachment: "fixed",
+          paddingTop: "150px",
+          // backgroundImage: `url(/src/assets/cbf-wallpaper.jpg)`,
+          // backgroundPosition: "center",
+          // backgroundRepeat: "no-repeat",
+          // backgroundSize: "cover",
+          // backgroundAttachment: "fixed",
         }}
       >
         <WebRouter />

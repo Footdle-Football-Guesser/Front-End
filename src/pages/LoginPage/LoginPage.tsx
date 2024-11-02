@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 
 export const LoginPage = () => {
@@ -11,7 +11,7 @@ export const LoginPage = () => {
         alignItems: "center",
       }}
     >
-      <h1>Login</h1>
+      <Typography variant="h3">Login</Typography>
       <TextField
         variant="outlined"
         label={"Nome de usuário"}
