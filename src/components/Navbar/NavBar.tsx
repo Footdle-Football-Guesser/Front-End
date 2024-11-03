@@ -1,20 +1,20 @@
-import { AppBar, Box, Button, IconButton, List, Toolbar } from "@mui/material";
+import { AppBar, Box, IconButton, List, Toolbar } from "@mui/material";
 
 import { PersonRounded, HomeRounded } from "@mui/icons-material";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { brasileiraoTeamsList } from "../../util";
+import { LogoButton } from "../LogoButton";
 
 export const NavBar = () => {
-  const [logoScale, setLogoScale] = useState<number>(1);
   const navigate = useNavigate();
 
   return (
-    <AppBar position="fixed" sx={{ bgcolor: "#ffff" }}>
+    <AppBar position="fixed" sx={{ bgcolor: "#ffff", minHeight: "auto" }}>
       <Toolbar
         sx={{
           display: "flex",
           flexDirection: "column",
-          maxHeight: "200px",
+          maxHeight: "89px",
           padding: 0,
         }}
         disableGutters
@@ -23,23 +23,29 @@ export const NavBar = () => {
         <List
           sx={{
             display: "flex",
-            gap: "10px",
+            gap: "4px",
             bgcolor: "#ffff",
             width: "100%",
-            padding: 0,
+            padding: "4px",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <li>
-            <Button>Teste</Button>
-          </li>
-          <li>
-            <Button>Teste</Button>
-          </li>
-          <li>
-            <Button>Teste</Button>
-          </li>
+          {brasileiraoTeamsList.map((team, index) => (
+            <li
+              key={`${team.name}-${index}`}
+              style={{
+                padding: "8px",
+              }}
+            >
+              <LogoButton
+                width={"24px"}
+                height={"24px"}
+                src={team.logo}
+                buttonStylesProps={{ padding: 0 }}
+              />
+            </li>
+          ))}
         </List>
         {/* NOTE: Box para exibir a NavBar tradicional */}
         <Box
@@ -66,32 +72,19 @@ export const NavBar = () => {
               <HomeRounded sx={{ fontSize: "24px" }} />
             </IconButton>
           </Box>
-          <Box sx={{ position: "relative", padding: "0 0 0 20px" }}>
-            <IconButton
-              disableRipple
-              onMouseEnter={() => setLogoScale(1.2)}
-              onMouseLeave={() => setLogoScale(1)}
-              onClick={() =>
-                window.open(
-                  "https://ge.globo.com/futebol/brasileirao-serie-a/",
-                  "_blank",
-                  "noopener,noreferrer"
-                )
-              }
-              sx={{ position: "absolute", padding: 0, top: 0, bottom: 0 }}
-            >
-              <img
-                src="/src/assets/logo-footdle.png"
-                alt="logo"
-                style={{
-                  width: "100px",
-                  height: "70px",
-                  objectFit: "contain",
-                  transform: `scale(${logoScale})`,
-                  transition: "transform 0.1s ease",
-                }}
-              />
-            </IconButton>
+          <Box sx={{ padding: "0 0 0 20px" }}>
+            <LogoButton
+              width={"100px"}
+              height={"70px"}
+              url={"https://ge.globo.com/futebol/brasileirao-serie-a/"}
+              src={"/src/assets/logo-footdle.png"}
+              buttonStylesProps={{
+                position: "absolute",
+                padding: 0,
+                bottom: 0,
+                top: "35px",
+              }}
+            />
           </Box>
         </Box>
       </Toolbar>

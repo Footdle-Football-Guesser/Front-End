@@ -1,4 +1,4 @@
 export type BrasileiraoTeam = {
   name: string;
-  logo: "";
+  logo: string;
 };

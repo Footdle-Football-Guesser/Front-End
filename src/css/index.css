@@ -1,6 +1,7 @@
 /* NOTE: Caso necessário adicionar qualquer estilização extra, colocar aqui */
 body {
   margin: 0;
+  height: 100%;
 }
 
 * {

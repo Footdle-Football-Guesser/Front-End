@@ -14,14 +14,10 @@ function App() {
       <Box
         component={"main"}
         sx={{
-          height: "100%",
+          height: "calc(100vh - 89px)",
           width: "100%",
-          paddingTop: "150px",
-          // backgroundImage: `url(/src/assets/cbf-wallpaper.jpg)`,
-          // backgroundPosition: "center",
-          // backgroundRepeat: "no-repeat",
-          // backgroundSize: "cover",
-          // backgroundAttachment: "fixed",
+          marginTop: "89px",
+          overflow: "hidden",
         }}
       >
         <WebRouter />
