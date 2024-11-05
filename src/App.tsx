@@ -17,6 +17,11 @@ function App() {
           height: "calc(100vh - 89px)",
           width: "100%",
           marginTop: "89px",
+          backgroundImage: `url(/src/assets/cbf-wallpaper.jpg)`,
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundAttachment: "fixed",
           overflow: "hidden",
         }}
       >
