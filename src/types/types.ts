@@ -4,11 +4,12 @@ export type BrasileiraoTeam = {
   url?: string;
 };
 
-export type BrasileiraoPlayers = {
+export type BrasileiraoPlayer = {
   name: string;
   position: "atacante" | "meia" | "defensor" | "goleiro";
   nationality: string;
   team: BrasileiraoTeam;
   age: number;
   shirtNumber: number;
+  photo?: string;
 };

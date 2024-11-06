@@ -15,6 +15,7 @@ export const LoginPage = () => {
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <Card
+          width={"250px"}
           content={
             <Box
               sx={{

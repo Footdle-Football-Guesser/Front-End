@@ -1,5 +1,5 @@
 //TODO: quando tiver banco de dados, fazer as adaptações aqui para buscar corretamente os valores do banco
-import { BrasileiraoTeam, BrasileiraoPlayers } from "./types";
+import { BrasileiraoTeam, BrasileiraoPlayer } from "../types/types";
 
 import athtleticoP from "../assets/escudos/Athletico Paranaense.png";
 import athtleticoG from "../assets/escudos/Atlético Goianiense.png";
@@ -45,7 +45,7 @@ export const brasileiraoTeamsList: BrasileiraoTeam[] = [
   { name: "Vitória", logo: vitoria },
 ];
 
-export const brasileiraoPlayers: BrasileiraoPlayers[] = [
+export const brasileiraoPlayerList: BrasileiraoPlayer[] = [
   {
     name: "Sergio Rochet",
     position: "goleiro",
