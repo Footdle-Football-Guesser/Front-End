@@ -1,8 +1,10 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { Card } from "../../components";
-import { BrasileiraoPlayer, brasileiraoPlayerList } from "../../util";
+// import { BrasileiraoPlayer, brasileiraoPlayerList } from "../../util";
 import { useEffect, useState } from "react";
 import { PlayerCard } from "../../components/PlayerCard";
+import { BrasileiraoPlayer } from "../../types/types";
+import getAllBrasileiraoPlayers from "../../service/brasileiraoPlayerService";
 
 export const HomePage = () => {
   const [playerTriedList, setPlayerTriedList] = useState<BrasileiraoPlayer[]>(
@@ -10,6 +12,18 @@ export const HomePage = () => {
   );
   const [randomPlayer, setRandomPlayer] = useState<BrasileiraoPlayer>();
   const [hasFindedTodaysPlayer, setHasFindedTodaysPlayer] = useState(false);
+  const [brasileiraoPlayerList, setBrasileiraoPlayersList] = useState<
+    BrasileiraoPlayer[]
+  >([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const list = getAllBrasileiraoPlayers();
+    list
+      .then((data) => setBrasileiraoPlayersList(data))
+      .catch((e) => console.error(e))
+      .finally(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
     const newPlayer =
@@ -40,6 +54,11 @@ export const HomePage = () => {
       setPlayerTriedList(newPlayerTriedList);
     }
   };
+
+  //TODO: add loading do material
+  if (loading) {
+    return <h1>Teste</h1>;
+  }
 
   return (
     <Box sx={{ width: "100%", height: "100%", paddingTop: "20px" }}>
