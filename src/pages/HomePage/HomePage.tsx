@@ -1,10 +1,8 @@
-import { Box, TextField, Typography } from "@mui/material";
-import { Card } from "../../components";
-// import { BrasileiraoPlayer, brasileiraoPlayerList } from "../../util";
+import { Box, CircularProgress, TextField, Typography } from "@mui/material";
+import { Card, PlayerCard } from "@/components";
 import { useEffect, useState } from "react";
-import { PlayerCard } from "../../components/PlayerCard";
 import { BrasileiraoPlayer } from "../../types/types";
-import getAllBrasileiraoPlayers from "../../service/brasileiraoPlayerService";
+import { BrasileiraoPlayerService } from "@/service";
 
 export const HomePage = () => {
   const [playerTriedList, setPlayerTriedList] = useState<BrasileiraoPlayer[]>(
@@ -18,13 +16,15 @@ export const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const list = getAllBrasileiraoPlayers();
-    list
-      .then((data) => setBrasileiraoPlayersList(data))
-      .catch((e) => console.error(e))
-      .finally(() => setLoading(false));
+    BrasileiraoPlayerService.getAllBrasileiraoPlayers()
+      .then((data) => {
+        setBrasileiraoPlayersList(data);
+        setLoading(false);
+      })
+      .catch((e) => console.error(e));
   }, []);
 
+  //NOTE: rever essa logica
   useEffect(() => {
     const newPlayer =
       brasileiraoPlayerList[
@@ -57,7 +57,21 @@ export const HomePage = () => {
 
   //TODO: add loading do material
   if (loading) {
-    return <h1>Teste</h1>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          height: "100%",
+          backdropFilter: "blur(4px)",
+          color: "white.500",
+        }}
+      >
+        <CircularProgress size={150} thickness={3} color="inherit" />
+      </Box>
+    );
   }
 
   return (

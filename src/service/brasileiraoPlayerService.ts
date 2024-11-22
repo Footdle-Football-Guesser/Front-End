@@ -7,4 +7,4 @@ const getAllBrasileiraoPlayers = (): Promise<BrasileiraoPlayer[]> => {
     .then((response) => response.data);
 };
 
-export default getAllBrasileiraoPlayers;
+export default { getAllBrasileiraoPlayers };
