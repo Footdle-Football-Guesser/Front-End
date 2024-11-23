@@ -5,10 +5,11 @@ export type BrasileiraoTeam = {
 };
 
 export type BrasileiraoPlayer = {
+  id: number;
   name: string;
   position: "atacante" | "meia" | "defensor" | "goleiro";
   nationality: string;
-  team: BrasileiraoTeam;
+  team: string;
   age: number;
   shirtNumber: number;
   photo?: string;

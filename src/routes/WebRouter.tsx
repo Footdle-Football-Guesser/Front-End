@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import { LoginPage, HomePage } from "../pages/index";
+import { ConfigurationPage, HomePage } from "../pages/index";
 
 const WebRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<ConfigurationPage />} />
     </Routes>
   );
 };
