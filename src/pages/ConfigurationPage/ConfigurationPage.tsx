@@ -49,7 +49,7 @@ export const ConfigurationPage = () => {
       >
         <Card
           width={"auto"}
-          content={
+          children={
             <Box
               sx={{
                 display: "flex",
@@ -61,19 +61,63 @@ export const ConfigurationPage = () => {
               <Typography variant="h4" sx={{ marginBottom: "24px" }}>
                 Configuração Jogador
               </Typography>
-              <List>
-                {/* TODO: adicionar span + label */}
-                {brasileiraoPlayerList.map((player) => (
-                  <Box sx={{ display: "flex", gap: "10px" }}>
-                    <span>{player.id}</span>
-                    <span>{player.name}</span>
-                    <span>{player.nationality}</span>
-                    <span>{player.position}</span>
-                    <span>{player.shirtNumber}</span>
-                    <span>{player.team}</span>
-                    <span>{player.age}</span>
-                  </Box>
-                ))}
+              <List
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Box
+                  sx={{
+                    overflow: "auto",
+                    maxHeight: "500px",
+                    "&::-webkit-scrollbar": {
+                      width: "12px",
+                    },
+                    "&::-webkit-scrollbar-thumb": {
+                      backgroundColor: "#06AA48",
+                      borderRadius: "8px",
+                      minHeight: "50px",
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      backgroundColor: "#f1f1f1",
+                      borderRadius: "8px",
+                    },
+                  }}
+                >
+                  {/* TODO: adicionar span + label */}
+                  {brasileiraoPlayerList.length > 0 &&
+                    brasileiraoPlayerList.map((player, index) => (
+                      <li key={`player-${index}-${player.id}`}>
+                        {/* <Box
+                          sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: "10px",
+                            marginBottom: "10px",
+                            borderBottom: "1px solid #000000",
+                            marginRight: "10px",
+                          }}
+                        >
+                          <span>{player.name}</span>
+                          <span>{player.nationality}</span>
+                          <span>{player.position}</span>
+                          <span>{player.shirtNumber}</span>
+                          <span>{player.team}</span>
+                          <span>{player.age}</span>
+                        </Box> */}
+                        {/* TODO: criar um card para cada jogador */}
+                        <Card width={"auto"}>
+                          <span>{player.name}</span>
+                          <span>{player.nationality}</span>
+                          <span>{player.position}</span>
+                          <span>{player.shirtNumber}</span>
+                          <span>{player.team}</span>
+                          <span>{player.age}</span>
+                        </Card>
+                      </li>
+                    ))}
+                </Box>
               </List>
             </Box>
           }

@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 interface CardProps {
-  content: React.ReactNode;
+  children: ReactNode;
   width: CSSProperties["width"];
 }
 
-export const Card: React.FC<CardProps> = ({ content, width }) => {
+export const Card: React.FC<CardProps> = ({ children, width }) => {
   return (
     <Box
       sx={{
@@ -18,7 +18,7 @@ export const Card: React.FC<CardProps> = ({ content, width }) => {
         height: "auto",
       }}
     >
-      {content}
+      {children}
     </Box>
   );
 };
