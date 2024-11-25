@@ -1,6 +1,6 @@
 import { AppBar, Box, IconButton, List, Toolbar } from "@mui/material";
 
-import { PersonRounded, HomeRounded } from "@mui/icons-material";
+import { SettingsRounded, HomeRounded } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { brasileiraoTeamsList } from "../../util";
 import { LogoButton } from "../LogoButton";
@@ -65,11 +65,11 @@ export const NavBar = () => {
               padding: "0 20px 0 0",
             }}
           >
-            <IconButton onClick={() => navigate("/login")}>
-              <PersonRounded sx={{ fontSize: "24px" }} />
-            </IconButton>
             <IconButton onClick={() => navigate("/")}>
               <HomeRounded sx={{ fontSize: "24px" }} />
+            </IconButton>
+            <IconButton onClick={() => navigate("/login")}>
+              <SettingsRounded sx={{ fontSize: "24px" }} />
             </IconButton>
           </Box>
           <Box sx={{ padding: "0 0 0 20px" }}>

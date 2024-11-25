@@ -71,7 +71,7 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
             borderStyle: "solid",
           }}
         >
-          <span>{brasileiraoPlayer.team.name}</span>
+          <span>{brasileiraoPlayer.team}</span>
         </Box>
         <Box
           sx={{

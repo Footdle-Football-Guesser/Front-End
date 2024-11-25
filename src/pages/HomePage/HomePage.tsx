@@ -81,7 +81,7 @@ export const HomePage = () => {
       >
         <Card
           width={"600px"}
-          content={
+          children={
             <Box
               sx={{
                 display: "flex",
