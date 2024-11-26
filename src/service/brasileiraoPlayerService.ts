@@ -7,4 +7,20 @@ const getAllBrasileiraoPlayers = (): Promise<BrasileiraoPlayer[]> => {
     .then((response) => response.data);
 };
 
-export default { getAllBrasileiraoPlayers };
+const updateBrasileiraoPlayer = (player: BrasileiraoPlayer) => {
+  return api
+    .put(`/updateBrasileiraoPlayer/${player.id}`, player)
+    .then((response) => response.status);
+};
+
+const deleteBrasileiraoPlayer = (playerId: number) => {
+  return api
+    .delete(`/deleteBrasileiraoPlayer/${playerId}`)
+    .then((response) => response.status);
+};
+
+export default {
+  getAllBrasileiraoPlayers,
+  updateBrasileiraoPlayer,
+  deleteBrasileiraoPlayer,
+};

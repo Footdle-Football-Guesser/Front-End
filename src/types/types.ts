@@ -10,7 +10,7 @@ export type BrasileiraoPlayer = {
   position: "atacante" | "meia" | "defensor" | "goleiro";
   nationality: string;
   team: string;
-  age: number;
   shirtNumber: number;
+  age: number;
   photo?: string;
 };
