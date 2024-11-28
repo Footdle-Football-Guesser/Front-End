@@ -12,5 +12,4 @@ export type BrasileiraoPlayer = {
   team: string;
   shirtNumber: number;
   age: number;
-  photo?: string;
 };

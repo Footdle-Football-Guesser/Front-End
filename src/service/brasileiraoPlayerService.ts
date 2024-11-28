@@ -8,16 +8,14 @@ const getAllBrasileiraoPlayers = (): Promise<BrasileiraoPlayer[]> => {
 };
 
 const updateBrasileiraoPlayer = (player: BrasileiraoPlayer) => {
-  return api
-    .put(`/updateBrasileiraoPlayer/${player.id}`, player)
-    .then((response) => response.status);
+  return api.put(`/updateBrasileiraoPlayer/${player.id}`, player);
 };
 
 const deleteBrasileiraoPlayer = (playerId: number) => {
-  return api
-    .delete(`/deleteBrasileiraoPlayer/${playerId}`)
-    .then((response) => response.status);
+  return api.delete(`/deleteBrasileiraoPlayer/${playerId}`);
 };
+
+// TODO: adicionar método POST
 
 export default {
   getAllBrasileiraoPlayers,

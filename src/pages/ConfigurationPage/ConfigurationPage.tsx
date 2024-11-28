@@ -2,9 +2,13 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControl,
   IconButton,
+  InputLabel,
   List,
+  MenuItem,
   Modal,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -15,15 +19,31 @@ import { BrasileiraoPlayerService } from "@/service";
 import SearchIconRounded from "@mui/icons-material/Search";
 import CloseIconRounded from "@mui/icons-material/Close";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import { useForm, Controller } from "react-hook-form";
+
+type FormProps = {
+  id: number;
+  name: string;
+  position: "atacante" | "meia" | "defensor" | "goleiro";
+  nationality: string;
+  shirtNumber: number;
+  age: number;
+  team: string;
+};
 
 export const ConfigurationPage = () => {
   const [brasileiraoPlayerList, setBrasileiraoPlayersList] = useState<
     BrasileiraoPlayer[]
   >([]);
   const [searchedPlayerName, setSearchedPlayerName] = useState<string>();
-  const [playerSelected, setPlayerSelected] = useState<BrasileiraoPlayer>();
   const [loading, setLoading] = useState(true);
   const [openModal, setOpenModal] = useState(false);
+
+  const { control, setValue, watch } = useForm<FormProps>({
+    mode: "all",
+  });
+
+  const formValues = watch();
 
   useEffect(() => {
     BrasileiraoPlayerService.getAllBrasileiraoPlayers()
@@ -32,33 +52,51 @@ export const ConfigurationPage = () => {
         setLoading(false);
       })
       .catch((e) => console.error(e));
-  }, []);
+  }, [loading]);
 
   const handleSearchPlayer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchedPlayerName(e.target.value.toLocaleLowerCase());
   };
 
   const handleOpenModal = (flag: boolean, player?: BrasileiraoPlayer) => {
-    console.log(flag);
     if (player) {
-      setPlayerSelected(player);
+      setValue("age", player.age);
+      setValue("id", player.id);
+      setValue("name", player.name);
+      setValue("nationality", player.nationality);
+      setValue("position", player.position);
+      setValue("shirtNumber", player.shirtNumber);
+      setValue("team", player.team);
     }
     setOpenModal(flag);
   };
 
-  const updateBrasileiraoPlayer = (player?: BrasileiraoPlayer) => {
-    if (player) {
-      console.log(player);
-      BrasileiraoPlayerService.updateBrasileiraoPlayer(player).then((status) =>
-        alert(status)
-      );
-    }
+  const updateBrasileiraoPlayer = (player: BrasileiraoPlayer) => {
+    BrasileiraoPlayerService.updateBrasileiraoPlayer(player)
+      .then(() => {
+        window.alert("Jogador atualizado com sucesso!");
+        setSearchedPlayerName(undefined);
+        setOpenModal(false);
+        setLoading(true);
+      })
+      .catch((e) => console.error(e));
   };
 
   const deleteBrasileiraoPlayer = (playerId: number) => {
-    BrasileiraoPlayerService.deleteBrasileiraoPlayer(playerId).then((status) =>
-      alert(status)
-    );
+    if (
+      window.confirm(
+        "Tem certeza que deseja realmente excluir o jogador selecionado?"
+      )
+    ) {
+      BrasileiraoPlayerService.deleteBrasileiraoPlayer(playerId)
+        .then(() => {
+          window.alert("Jogador removido com sucesso!");
+          setSearchedPlayerName(undefined);
+          setOpenModal(false);
+          setLoading(true);
+        })
+        .catch((e) => console.error(e));
+    }
   };
 
   if (loading) {
@@ -268,42 +306,105 @@ export const ConfigurationPage = () => {
                         marginTop: "10px",
                       }}
                     >
-                      <TextField
-                        variant="outlined"
-                        label={"Nome:"}
-                        defaultValue={playerSelected?.name}
-                        autoFocus
-                        fullWidth
+                      <Controller
+                        name="name"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            variant="outlined"
+                            label={"Nome:"}
+                            autoFocus
+                            fullWidth
+                            {...field}
+                          />
+                        )}
                       />
-                      <TextField
-                        variant="outlined"
-                        fullWidth
-                        label={"Posição:"}
-                        defaultValue={playerSelected?.position}
+                      <Controller
+                        name="position"
+                        control={control}
+                        render={({ field }) => (
+                          // <TextField
+                          //   variant="outlined"
+                          //   label={"Posição:"}
+                          //   // defaultValue={playerSelected?.position}
+                          //   autoFocus
+                          //   fullWidth
+                          //   {...field}
+                          // />
+                          <FormControl fullWidth>
+                            <InputLabel id="player-position-label">
+                              Posição
+                            </InputLabel>
+                            <Select
+                              labelId="player-position-label"
+                              id="player-select-position"
+                              label="Posição"
+                              {...field}
+                            >
+                              <MenuItem value={"atacante"}>Atacante</MenuItem>
+                              <MenuItem value={"meia"}>Meia</MenuItem>
+                              <MenuItem value={"defensor"}>Defensor</MenuItem>
+                              <MenuItem value={"goleiro"}>Goleiro</MenuItem>
+                            </Select>
+                          </FormControl>
+                        )}
                       />
-                      <TextField
-                        variant="outlined"
-                        label={"Número da Camisa:"}
-                        fullWidth
-                        defaultValue={playerSelected?.shirtNumber.toString()}
+                      <Controller
+                        name="shirtNumber"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            type="number"
+                            variant="outlined"
+                            label={"Nº da camisa:"}
+                            // defaultValue={playerSelected?.shirtNumber}
+                            fullWidth
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
+                        )}
                       />
-                      <TextField
-                        variant="outlined"
-                        label={"Nacionalidade:"}
-                        defaultValue={playerSelected?.nationality}
-                        fullWidth
+                      <Controller
+                        name="nationality"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            variant="outlined"
+                            label={"Nacionalidade:"}
+                            fullWidth
+                            {...field}
+                          />
+                        )}
                       />
-                      <TextField
-                        variant="outlined"
-                        label={"Idade:"}
-                        fullWidth
-                        defaultValue={playerSelected?.age.toString()}
+                      <Controller
+                        name="age"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            type="number"
+                            variant="outlined"
+                            label={"Idade:"}
+                            fullWidth
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(Number(e.target.value))
+                            }
+                          />
+                        )}
                       />
-                      <TextField
-                        variant="outlined"
-                        label={"Time:"}
-                        fullWidth
-                        defaultValue={playerSelected?.team}
+                      <Controller
+                        name="team"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            variant="outlined"
+                            label={"Time:"}
+                            fullWidth
+                            {...field}
+                          />
+                        )}
                       />
                     </Box>
                     {/* TODO: estilizar botoes */}
@@ -317,15 +418,17 @@ export const ConfigurationPage = () => {
                     >
                       <Button
                         variant="contained"
-                        onClick={() =>
-                          deleteBrasileiraoPlayer(playerSelected?.id ?? 0)
-                        }
+                        onClick={() => deleteBrasileiraoPlayer(formValues.id)}
                       >
                         <DeleteRoundedIcon />
                       </Button>
                       <Button
                         variant="contained"
-                        onClick={() => updateBrasileiraoPlayer(playerSelected)}
+                        onClick={() =>
+                          updateBrasileiraoPlayer({
+                            ...formValues,
+                          } as BrasileiraoPlayer)
+                        }
                       >
                         <span>Salvar</span>
                       </Button>
