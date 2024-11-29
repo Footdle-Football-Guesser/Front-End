@@ -1,35 +1,18 @@
 import {
   Box,
-  Button,
   CircularProgress,
-  FormControl,
   IconButton,
-  InputLabel,
   List,
-  MenuItem,
-  Modal,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
-import { Card } from "../../components";
-import { useEffect, useState } from "react";
+import { Card, PlayerCard } from "@/components/";
+import { useEffect, useRef, useState } from "react";
 import { BrasileiraoPlayer } from "@/types/types";
 import { BrasileiraoPlayerService } from "@/service";
 import SearchIconRounded from "@mui/icons-material/Search";
-import CloseIconRounded from "@mui/icons-material/Close";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { useForm, Controller } from "react-hook-form";
-
-type FormProps = {
-  id: number;
-  name: string;
-  position: "atacante" | "meia" | "defensor" | "goleiro";
-  nationality: string;
-  shirtNumber: number;
-  age: number;
-  team: string;
-};
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { BrasileiraoPlayerModal } from "@/components/BrasileiraoPlayerModal";
 
 export const ConfigurationPage = () => {
   const [brasileiraoPlayerList, setBrasileiraoPlayersList] = useState<
@@ -37,13 +20,9 @@ export const ConfigurationPage = () => {
   >([]);
   const [searchedPlayerName, setSearchedPlayerName] = useState<string>();
   const [loading, setLoading] = useState(true);
+  const [playerToModal, setPlayerToModal] = useState<BrasileiraoPlayer>();
   const [openModal, setOpenModal] = useState(false);
-
-  const { control, setValue, watch } = useForm<FormProps>({
-    mode: "all",
-  });
-
-  const formValues = watch();
+  const searchTextFieldRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     BrasileiraoPlayerService.getAllBrasileiraoPlayers()
@@ -52,51 +31,25 @@ export const ConfigurationPage = () => {
         setLoading(false);
       })
       .catch((e) => console.error(e));
-  }, [loading]);
+  }, []);
 
   const handleSearchPlayer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchedPlayerName(e.target.value.toLocaleLowerCase());
   };
 
-  const handleOpenModal = (flag: boolean, player?: BrasileiraoPlayer) => {
-    if (player) {
-      setValue("age", player.age);
-      setValue("id", player.id);
-      setValue("name", player.name);
-      setValue("nationality", player.nationality);
-      setValue("position", player.position);
-      setValue("shirtNumber", player.shirtNumber);
-      setValue("team", player.team);
-    }
-    setOpenModal(flag);
+  const handleOpenModal = (player?: BrasileiraoPlayer) => {
+    setPlayerToModal(player);
+    setOpenModal(true);
   };
 
-  const updateBrasileiraoPlayer = (player: BrasileiraoPlayer) => {
-    BrasileiraoPlayerService.updateBrasileiraoPlayer(player)
-      .then(() => {
-        window.alert("Jogador atualizado com sucesso!");
-        setSearchedPlayerName(undefined);
-        setOpenModal(false);
-        setLoading(true);
-      })
-      .catch((e) => console.error(e));
-  };
-
-  const deleteBrasileiraoPlayer = (playerId: number) => {
-    if (
-      window.confirm(
-        "Tem certeza que deseja realmente excluir o jogador selecionado?"
-      )
-    ) {
-      BrasileiraoPlayerService.deleteBrasileiraoPlayer(playerId)
-        .then(() => {
-          window.alert("Jogador removido com sucesso!");
-          setSearchedPlayerName(undefined);
-          setOpenModal(false);
-          setLoading(true);
-        })
-        .catch((e) => console.error(e));
-    }
+  const handleCloseModal = () => {
+    // NOTE: esse codigo comentado faz: ao fechar o modal, retira o texto e os jogadores exibidos (reseta tudo)
+    // if (searchTextFieldRef.current) {
+    //   searchTextFieldRef.current.value = "";
+    // }
+    // setSearchedPlayerName(undefined);
+    setPlayerToModal(undefined);
+    setOpenModal(false);
   };
 
   if (loading) {
@@ -135,7 +88,7 @@ export const ConfigurationPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
-                alignItems: "center",
+                // alignItems: "center",
                 overflow: "auto",
                 height: "500px",
                 maxHeight: "600px",
@@ -153,293 +106,80 @@ export const ConfigurationPage = () => {
                 },
               }}
             >
-              <Typography variant="h4" sx={{ marginBottom: "24px" }}>
-                Configurar Jogador
-              </Typography>
-              <Box>
-                <SearchIconRounded />
-                <TextField variant="standard" onChange={handleSearchPlayer} />
+              {/* Header */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                <Typography variant="h4" sx={{ marginBottom: "24px" }}>
+                  Gerenciar Jogadores
+                </Typography>
+                <IconButton
+                  sx={{
+                    position: "absolute",
+                    top: "9%",
+                    left: 0,
+                  }}
+                  onClick={() => handleOpenModal(undefined)}
+                >
+                  <AddCircleOutlineRoundedIcon />
+                </IconButton>
               </Box>
+              {/* Search */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  width: "100%",
+                }}
+              >
+                <SearchIconRounded />
+                <TextField
+                  inputRef={searchTextFieldRef}
+                  variant="standard"
+                  sx={{ width: "200px" }}
+                  onChange={handleSearchPlayer}
+                  placeholder="Digite o nome do jogador"
+                />
+              </Box>
+              {/* Lista de jogadores */}
               <List
                 sx={{
                   display: "flex",
                   gap: "10px",
                   flexDirection: "column",
+                  padding: "10px",
                 }}
               >
                 {/* TODO: adicionar span + label */}
                 {searchedPlayerName &&
                   brasileiraoPlayerList
                     .filter((player) =>
-                      player.name
-                        .toLocaleLowerCase()
-                        .includes(searchedPlayerName)
+                      player.name.toLowerCase().includes(searchedPlayerName)
                     )
-                    .map((player, index) => (
-                      <li key={`player-${index}-${player.id}`}>
-                        <Box
-                          sx={{ cursor: "pointer", position: "relative" }}
-                          onClick={() => handleOpenModal(true, player)}
-                        >
-                          <Card width={"auto"}>
-                            <Box
-                              className="player-card"
-                              sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: "8px",
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "4px",
-                                  // borderRight: "1px solid #000000",
-                                  // paddingRight: "4px",
-                                }}
-                              >
-                                <span>Nome:</span>
-                                <span>{player.name}</span>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "4px",
-                                  // borderRight: "1px solid #000000",
-                                  // paddingRight: "4px",
-                                }}
-                              >
-                                <span>Time:</span>
-                                <span>{player.team}</span>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "4px",
-                                  // borderRight: "1px solid #000000",
-                                  // paddingRight: "4px",
-                                }}
-                              >
-                                <span>Posição:</span>
-                                <span>{player.position}</span>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "4px",
-                                  // borderRight: "1px solid #000000",
-                                  // paddingRight: "4px",
-                                }}
-                              >
-                                <span>Camisa nº:</span>
-                                <span>{player.shirtNumber}</span>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "4px",
-                                  // borderRight: "1px solid #000000",
-                                  // paddingRight: "4px",
-                                }}
-                              >
-                                <span>Nacionalidade:</span>
-                                <span>{player.nationality}</span>
-                              </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  gap: "4px",
-                                  // borderRight: "1px solid #000000",
-                                  // paddingRight: "4px",
-                                }}
-                              >
-                                <span>Idade:</span>
-                                <span>{player.age}</span>
-                              </Box>
-                            </Box>
-                          </Card>
-                        </Box>
-                      </li>
+                    .map((player) => (
+                      <PlayerCard
+                        key={`configurationPage-playerCard-${player.id}`}
+                        player={player}
+                        onClick={() => handleOpenModal(player)}
+                      />
                     ))}
-                <Modal
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  open={openModal}
-                  onClose={() => handleOpenModal(false)}
-                >
-                  <Box
-                    sx={{
-                      bgcolor: "#fff",
-                      borderRadius: "8px",
-                      boxShadow: 24,
-                      p: 4,
-                      width: "500px",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="h6">Editando Jogador</Typography>
-                      <IconButton onClick={() => handleOpenModal(false)}>
-                        <CloseIconRounded />
-                      </IconButton>
-                    </Box>
-                    {/* TODO: adidioncar react-hook-form */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "12px",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            label={"Nome:"}
-                            autoFocus
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="position"
-                        control={control}
-                        render={({ field }) => (
-                          // <TextField
-                          //   variant="outlined"
-                          //   label={"Posição:"}
-                          //   // defaultValue={playerSelected?.position}
-                          //   autoFocus
-                          //   fullWidth
-                          //   {...field}
-                          // />
-                          <FormControl fullWidth>
-                            <InputLabel id="player-position-label">
-                              Posição
-                            </InputLabel>
-                            <Select
-                              labelId="player-position-label"
-                              id="player-select-position"
-                              label="Posição"
-                              {...field}
-                            >
-                              <MenuItem value={"atacante"}>Atacante</MenuItem>
-                              <MenuItem value={"meia"}>Meia</MenuItem>
-                              <MenuItem value={"defensor"}>Defensor</MenuItem>
-                              <MenuItem value={"goleiro"}>Goleiro</MenuItem>
-                            </Select>
-                          </FormControl>
-                        )}
-                      />
-                      <Controller
-                        name="shirtNumber"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            type="number"
-                            variant="outlined"
-                            label={"Nº da camisa:"}
-                            // defaultValue={playerSelected?.shirtNumber}
-                            fullWidth
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="nationality"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            label={"Nacionalidade:"}
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="age"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            type="number"
-                            variant="outlined"
-                            label={"Idade:"}
-                            fullWidth
-                            {...field}
-                            onChange={(e) =>
-                              field.onChange(Number(e.target.value))
-                            }
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="team"
-                        control={control}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            label={"Time:"}
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </Box>
-                    {/* TODO: estilizar botoes */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        gap: "4px",
-                        flexDirection: "row-reverse",
-                        marginTop: "10px",
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        onClick={() => deleteBrasileiraoPlayer(formValues.id)}
-                      >
-                        <DeleteRoundedIcon />
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() =>
-                          updateBrasileiraoPlayer({
-                            ...formValues,
-                          } as BrasileiraoPlayer)
-                        }
-                      >
-                        <span>Salvar</span>
-                      </Button>
-                    </Box>
-                  </Box>
-                </Modal>
               </List>
             </Box>
           }
         />
       </Box>
+      <BrasileiraoPlayerModal
+        open={openModal}
+        onClose={handleCloseModal}
+        player={playerToModal}
+      />
     </Box>
   );
 };

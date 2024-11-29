@@ -7,6 +7,10 @@ const getAllBrasileiraoPlayers = (): Promise<BrasileiraoPlayer[]> => {
     .then((response) => response.data);
 };
 
+const createBrasileiraoPlayer = (player: Omit<BrasileiraoPlayer, "id">) => {
+  return api.post<BrasileiraoPlayer>(`/newBrasileiraoPlayer`, player);
+};
+
 const updateBrasileiraoPlayer = (player: BrasileiraoPlayer) => {
   return api.put(`/updateBrasileiraoPlayer/${player.id}`, player);
 };
@@ -19,6 +23,7 @@ const deleteBrasileiraoPlayer = (playerId: number) => {
 
 export default {
   getAllBrasileiraoPlayers,
+  createBrasileiraoPlayer,
   updateBrasileiraoPlayer,
   deleteBrasileiraoPlayer,
 };

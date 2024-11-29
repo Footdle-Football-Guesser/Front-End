@@ -1,0 +1,1 @@
+export { BrasileiraoPlayerModal } from "./BrasileiraoPlayerModal";
