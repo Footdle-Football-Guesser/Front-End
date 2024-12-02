@@ -5,7 +5,7 @@ const WebRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<ConfigurationPage />} />
+      <Route path="/config" element={<ConfigurationPage />} />
     </Routes>
   );
 };

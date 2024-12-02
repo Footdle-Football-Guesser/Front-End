@@ -1,5 +1,5 @@
 import { BrasileiraoPlayerService } from "@/service";
-import { BrasileiraoPlayer } from "@/util";
+import { BrasileiraoPlayer } from "@/types";
 import {
   Box,
   Button,

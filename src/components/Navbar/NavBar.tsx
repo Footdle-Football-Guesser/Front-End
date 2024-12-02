@@ -68,7 +68,7 @@ export const NavBar = () => {
             <IconButton onClick={() => navigate("/")}>
               <HomeRounded sx={{ fontSize: "24px" }} />
             </IconButton>
-            <IconButton onClick={() => navigate("/login")}>
+            <IconButton onClick={() => navigate("/config")}>
               <SettingsRounded sx={{ fontSize: "24px" }} />
             </IconButton>
           </Box>
