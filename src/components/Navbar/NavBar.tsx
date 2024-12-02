@@ -2,7 +2,7 @@ import { AppBar, Box, IconButton, List, Toolbar } from "@mui/material";
 
 import { SettingsRounded, HomeRounded } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { brasileiraoTeamsList } from "../../util";
+import { brasileiraoTeamsList } from "@/util";
 import { LogoButton } from "../LogoButton";
 
 export const NavBar = () => {

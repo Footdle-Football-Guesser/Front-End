@@ -7,8 +7,9 @@ import {
 } from "@mui/material";
 import { Card, PlayerCard } from "@/components";
 import { useEffect, useRef, useState } from "react";
-import { BrasileiraoPlayer } from "../../types/types";
+import { BrasileiraoPlayer } from "@/types";
 import { BrasileiraoPlayerService } from "@/service";
+import { EmojiRain } from "@/util";
 
 export const HomePage = () => {
   const [playerTriedList, setPlayerTriedList] = useState<BrasileiraoPlayer[]>(
@@ -21,6 +22,8 @@ export const HomePage = () => {
   >([]);
   const [loading, setLoading] = useState(true);
   const searchTextFieldRef = useRef<HTMLInputElement | null>(null);
+  const [activeEmojiRain, setActiveEmojiRain] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   // NOTE: pega todos os jogadores salvos no banco
   useEffect(() => {
@@ -60,7 +63,8 @@ export const HomePage = () => {
     setSearchedPlayerName(undefined);
 
     if (player === randomPlayer) {
-      window.alert("ACERTOU");
+      setActiveEmojiRain(true);
+      setDisabled(true);
     }
   };
 
@@ -106,6 +110,7 @@ export const HomePage = () => {
                 inputRef={searchTextFieldRef}
                 variant="outlined"
                 placeholder="Digite o nome do jogador"
+                disabled={disabled}
                 onChange={handleOnChange}
                 sx={{ width: "570px" }}
               />
@@ -183,20 +188,24 @@ export const HomePage = () => {
                   },
                 }}
               >
-                {playerTriedList.map((player) => (
-                  <PlayerCard
-                    key={`homepage-triedPlayers-playerCard-${player.id}`}
-                    player={player}
-                    playerToMatch={randomPlayer}
-                    shouldShowMatches
-                    onClick={() => validatePlayerSelected(player)}
-                  />
-                ))}
+                {playerTriedList
+                  .flatMap((p, index) => {
+                    return { ...p, order: index };
+                  })
+                  .sort((a, b) => b.order - a.order)
+                  .map((player) => (
+                    <PlayerCard
+                      key={`homepage-triedPlayers-playerCard-${player.id}`}
+                      player={player}
+                      playerToMatch={randomPlayer}
+                    />
+                  ))}
               </List>
             </Box>
           }
         />
       </Box>
+      <EmojiRain active={activeEmojiRain} />
     </Box>
   );
 };

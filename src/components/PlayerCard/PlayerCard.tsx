@@ -1,24 +1,22 @@
 import { Box, MenuItem } from "@mui/material";
-import { BrasileiraoPlayer } from "../../util";
+import { BrasileiraoPlayer } from "@/types";
 
 interface PlayerCardProps {
   player: BrasileiraoPlayer;
   playerToMatch?: BrasileiraoPlayer;
-  shouldShowMatches?: boolean;
   onClick?: () => void;
 }
 
 export const PlayerCard: React.FC<PlayerCardProps> = ({
   player,
   playerToMatch,
-  shouldShowMatches = false,
   onClick,
 }) => {
   return (
     <MenuItem
       key={`playerCard-${player.id}`}
       sx={{
-        cursor: "pointer",
+        cursor: onClick ? "pointer" : "default",
         position: "relative",
         bgcolor: "#ede6e6",
         borderRadius: "8px",
@@ -26,6 +24,9 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         width: "100%",
       }}
       onClick={onClick}
+      disableTouchRipple={!onClick}
+      disableRipple={!onClick}
+      unselectable={onClick ? "on" : "off"}
     >
       <Box
         className="player-card"
@@ -39,8 +40,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         <Box
           className="playerCard-box-properties"
           sx={{
-            bgcolor: shouldShowMatches
-              ? player.name === playerToMatch?.name
+            bgcolor: playerToMatch
+              ? player.name === playerToMatch.name
                 ? "#06AA48"
                 : "#f24b4b"
               : "none",
@@ -52,8 +53,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         <Box
           className="playerCard-box-properties"
           sx={{
-            bgcolor: shouldShowMatches
-              ? player.team === playerToMatch?.team
+            bgcolor: playerToMatch
+              ? player.team === playerToMatch.team
                 ? "#06AA48"
                 : "#f24b4b"
               : "none",
@@ -65,8 +66,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         <Box
           className="playerCard-box-properties"
           sx={{
-            bgcolor: shouldShowMatches
-              ? player.position === playerToMatch?.position
+            bgcolor: playerToMatch
+              ? player.position === playerToMatch.position
                 ? "#06AA48"
                 : "#f24b4b"
               : "none",
@@ -78,8 +79,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         <Box
           className="playerCard-box-properties"
           sx={{
-            bgcolor: shouldShowMatches
-              ? player.shirtNumber === playerToMatch?.shirtNumber
+            bgcolor: playerToMatch
+              ? player.shirtNumber === playerToMatch.shirtNumber
                 ? "#06AA48"
                 : "#f24b4b"
               : "none",
@@ -87,17 +88,21 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         >
           <span>Camisa nº:</span>
           <span>
-            {playerToMatch && playerToMatch.shirtNumber > player.shirtNumber
-              ? ">"
-              : "<"}
+            {playerToMatch
+              ? playerToMatch.shirtNumber > player.shirtNumber
+                ? ">"
+                : playerToMatch.shirtNumber < player.shirtNumber
+                ? "<"
+                : ""
+              : ""}
             {player.shirtNumber}
           </span>
         </Box>
         <Box
           className="playerCard-box-properties"
           sx={{
-            bgcolor: shouldShowMatches
-              ? player.nationality === playerToMatch?.nationality
+            bgcolor: playerToMatch
+              ? player.nationality === playerToMatch.nationality
                 ? "#06AA48"
                 : "#f24b4b"
               : "none",
@@ -109,8 +114,8 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         <Box
           className="playerCard-box-properties"
           sx={{
-            bgcolor: shouldShowMatches
-              ? player.age === playerToMatch?.age
+            bgcolor: playerToMatch
+              ? player.age === playerToMatch.age
                 ? "#06AA48"
                 : "#f24b4b"
               : "none",
@@ -118,7 +123,13 @@ export const PlayerCard: React.FC<PlayerCardProps> = ({
         >
           <span>Idade:</span>
           <span>
-            {playerToMatch && playerToMatch.age > player.age ? ">" : "<"}
+            {playerToMatch
+              ? playerToMatch.age > player.age
+                ? ">"
+                : playerToMatch.age < player.age
+                ? "<"
+                : ""
+              : ""}
             {player.age}
           </span>
         </Box>
