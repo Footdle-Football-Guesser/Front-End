@@ -1,84 +1,42 @@
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-  List,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, List, TextField, Typography } from "@mui/material";
 import { Card, PlayerCard } from "@/components/";
-import { useEffect, useRef, useState } from "react";
-import { BrasileiraoPlayer } from "@/types/types";
-import { BrasileiraoPlayerService } from "@/service";
+import { useRef, useState } from "react";
+import { DBrasileiraoPlayer } from "@/types/types";
 import SearchIconRounded from "@mui/icons-material/Search";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import { BrasileiraoPlayerModal } from "@/components/BrasileiraoPlayerModal";
+import { useAppSelector } from "@/store/hooks";
+import { selectBrasileiraoPlayerList } from "@/store/brasileiraoPlayer/brasileiraoPlayerSlice";
 
 export const ConfigurationPage = () => {
-  const [brasileiraoPlayerList, setBrasileiraoPlayersList] = useState<
-    BrasileiraoPlayer[]
-  >([]);
+  const brasileiraoPlayerList = useAppSelector(selectBrasileiraoPlayerList);
   const [searchedPlayerName, setSearchedPlayerName] = useState<string>();
-  const [loading, setLoading] = useState(true);
-  const [playerToModal, setPlayerToModal] = useState<BrasileiraoPlayer>();
+  const [playerToModal, setPlayerToModal] = useState<DBrasileiraoPlayer>();
   const [openModal, setOpenModal] = useState(false);
   const searchTextFieldRef = useRef<HTMLInputElement | null>(null);
-
-  useEffect(() => {
-    BrasileiraoPlayerService.getAllBrasileiraoPlayers()
-      .then((data) => {
-        setBrasileiraoPlayersList(data);
-        setLoading(false);
-      })
-      .catch((e) => console.error(e));
-  }, []);
 
   const handleSearchPlayer = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchedPlayerName(e.target.value.toLocaleLowerCase());
   };
 
-  const handleOpenModal = (player?: BrasileiraoPlayer) => {
+  const handleOpenModal = (player?: DBrasileiraoPlayer) => {
     setPlayerToModal(player);
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
-    // NOTE: esse codigo comentado faz: ao fechar o modal, retira o texto e os jogadores exibidos (reseta tudo)
-    // if (searchTextFieldRef.current) {
-    //   searchTextFieldRef.current.value = "";
-    // }
-    // setSearchedPlayerName(undefined);
     setPlayerToModal(undefined);
     setOpenModal(false);
   };
 
-  if (loading) {
-    return (
+  return (
+    <Box>
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          width: "100%",
-          height: "100%",
-          backdropFilter: "blur(4px)",
-          color: "white.500",
         }}
-      >
-        <CircularProgress size={150} thickness={3} color="inherit" />
-      </Box>
-    );
-  }
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        paddingTop: "20px",
-      }}
-    >
-      <Box
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <Card
           width={"600px"}
@@ -88,7 +46,6 @@ export const ConfigurationPage = () => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
-                // alignItems: "center",
                 overflow: "auto",
                 height: "500px",
                 maxHeight: "600px",

@@ -4,22 +4,47 @@ import { SettingsRounded, HomeRounded } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { brasileiraoTeamsList } from "@/util";
 import { LogoButton } from "../LogoButton";
+import { useCallback, useEffect, useRef } from "react";
+import { useAppDispatch } from "@/store/hooks";
+import { updateTopBarHeight } from "@/store/app/appSlice";
 
 export const NavBar = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const ref = useRef<HTMLDivElement>(null);
+
+  const measureTopBarHeight = useCallback(() => {
+    if (ref.current) {
+      const newTopBarHeight = ref.current.offsetHeight;
+      dispatch(updateTopBarHeight(newTopBarHeight));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    measureTopBarHeight();
+
+    const resizer = new ResizeObserver(measureTopBarHeight);
+    if (ref.current) {
+      resizer.observe(ref.current);
+    }
+
+    return () => {
+      resizer.disconnect();
+    };
+  }, [measureTopBarHeight]);
 
   return (
     <AppBar position="fixed" sx={{ bgcolor: "#ffff", minHeight: "auto" }}>
       <Toolbar
+        ref={ref}
         sx={{
           display: "flex",
           flexDirection: "column",
-          maxHeight: "89px",
           padding: 0,
         }}
         disableGutters
       >
-        {/* NOTE: Box para exibir os ícones dos times do brasileirao */}
+        {/* NOTE: Lista para exibir os ícones dos times do brasileirao */}
         <List
           sx={{
             display: "flex",
@@ -53,7 +78,6 @@ export const NavBar = () => {
             display: "flex",
             justifyContent: "space-between",
             flexDirection: "row-reverse",
-            maxHeight: "40px",
             width: "100%",
             bgcolor: "#06aa48",
           }}

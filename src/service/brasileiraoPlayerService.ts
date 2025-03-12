@@ -1,17 +1,17 @@
-import { BrasileiraoPlayer } from "../types/types";
+import { DBrasileiraoPlayer } from "../types/types";
 import api from "./api";
 
-const getAllBrasileiraoPlayers = (): Promise<BrasileiraoPlayer[]> => {
+const getAllBrasileiraoPlayers = (): Promise<DBrasileiraoPlayer[]> => {
   return api
-    .get<BrasileiraoPlayer[]>("/brasileiraoPlayers")
+    .get<DBrasileiraoPlayer[]>("/brasileiraoPlayers")
     .then((response) => response.data);
 };
 
-const createBrasileiraoPlayer = (player: Omit<BrasileiraoPlayer, "id">) => {
-  return api.post<BrasileiraoPlayer>(`/newBrasileiraoPlayer`, player);
+const createBrasileiraoPlayer = (player: Omit<DBrasileiraoPlayer, "id">) => {
+  return api.post<DBrasileiraoPlayer>(`/newBrasileiraoPlayer`, player);
 };
 
-const updateBrasileiraoPlayer = (player: BrasileiraoPlayer) => {
+const updateBrasileiraoPlayer = (player: DBrasileiraoPlayer) => {
   return api.put(`/updateBrasileiraoPlayer/${player.id}`, player);
 };
 

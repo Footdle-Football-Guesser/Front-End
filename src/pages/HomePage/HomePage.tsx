@@ -1,60 +1,64 @@
-import {
-  Box,
-  CircularProgress,
-  List,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, List, TextField, Typography } from "@mui/material";
 import { Card, PlayerCard } from "@/components";
 import { useEffect, useRef, useState } from "react";
-import { BrasileiraoPlayer } from "@/types";
-import { BrasileiraoPlayerService } from "@/service";
+import { DBrasileiraoPlayer } from "@/types";
 import { EmojiRain } from "@/util";
+import { useAppSelector } from "@/store/hooks";
+import { selectBrasileiraoPlayerList } from "@/store/brasileiraoPlayer/brasileiraoPlayerSlice";
 
 export const HomePage = () => {
-  const [playerTriedList, setPlayerTriedList] = useState<BrasileiraoPlayer[]>(
+  // Lista de jogadores no Database
+  const brasileiraoPlayerListBD = useAppSelector(selectBrasileiraoPlayerList);
+
+  // Lista de jogadores ainda não 'tentados'/'escolhidos' pelo usuário durante o jogo
+  const [playerNotTriedList, setPlayerNotTriedList] = useState<
+    DBrasileiraoPlayer[]
+  >(brasileiraoPlayerListBD);
+
+  // Lista de jogadores já 'tentados'/'escolhidos' pelo usuário durante o jogo
+  const [playerTriedList, setPlayerTriedList] = useState<DBrasileiraoPlayer[]>(
     []
   );
+
+  // Nome do jogador procurado pelo usuário
   const [searchedPlayerName, setSearchedPlayerName] = useState<string>();
-  const [randomPlayer, setRandomPlayer] = useState<BrasileiraoPlayer>();
-  const [brasileiraoPlayerList, setBrasileiraoPlayersList] = useState<
-    BrasileiraoPlayer[]
-  >([]);
-  const [loading, setLoading] = useState(true);
+  const [randomPlayer, setRandomPlayer] = useState<DBrasileiraoPlayer>();
+
   const searchTextFieldRef = useRef<HTMLInputElement | null>(null);
   const [activeEmojiRain, setActiveEmojiRain] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  // NOTE: pega todos os jogadores salvos no banco
   useEffect(() => {
-    BrasileiraoPlayerService.getAllBrasileiraoPlayers()
-      .then((data) => {
-        // Pega a resposta da requisição e define como uma lista, de jogadores, aqui no Front
-        setBrasileiraoPlayersList(data);
+    if (brasileiraoPlayerListBD && brasileiraoPlayerListBD.length > 0) {
+      // A partir da lista, pega randomicamente, um jogador e o define para ser o cara da vez
+      const newPlayer =
+        brasileiraoPlayerListBD[
+          Math.floor(Math.random() * brasileiraoPlayerListBD.length)
+        ];
+      console.log(newPlayer);
+      setRandomPlayer(newPlayer);
+    }
+  }, [brasileiraoPlayerListBD]);
 
-        // A partir da lista, pega randomicamente, um jogador e o define para ser o cara da vez
-        const newPlayer = data[Math.floor(Math.random() * data.length)];
-        console.log(newPlayer);
-        setRandomPlayer(newPlayer);
-
-        // Tira o loading
-        setLoading(false);
-      })
-      .catch((e) => console.error(e));
-  }, []);
+  const validatePlayerName = (playerName: string) => {
+    return playerName
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchedPlayerName(e.target.value.toLocaleLowerCase());
+    setSearchedPlayerName(validatePlayerName(e.target.value));
   };
 
   // NOTE: func para validar o jogador pesquisado e selecionado pelo usuario
-  const validatePlayerSelected = (player: BrasileiraoPlayer) => {
+  const validatePlayerSelected = (player: DBrasileiraoPlayer) => {
     // adiciona o jogador tentado na lista de jogadores já tentados
     setPlayerTriedList([...playerTriedList, player]);
 
     // remove esse jogador da lista principal, para nao seleciona-lo novamente
-    setBrasileiraoPlayersList([
-      ...brasileiraoPlayerList.filter((p) => p.id != player.id),
+    setPlayerNotTriedList([
+      ...playerNotTriedList.filter((p) => p.id != player.id),
     ]);
 
     if (searchTextFieldRef.current) {
@@ -68,27 +72,8 @@ export const HomePage = () => {
     }
   };
 
-  //TODO: add loading do material
-  if (loading) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100%",
-          height: "100%",
-          backdropFilter: "blur(4px)",
-          color: "white.500",
-        }}
-      >
-        <CircularProgress size={150} thickness={3} color="inherit" />
-      </Box>
-    );
-  }
-
   return (
-    <Box sx={{ width: "100%", height: "100%", paddingTop: "20px" }}>
+    <Box>
       <Box
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
@@ -116,8 +101,8 @@ export const HomePage = () => {
               />
               {/* Lista para escolher o jogador */}
               {searchedPlayerName &&
-                brasileiraoPlayerList.some((p) =>
-                  p.name.toLowerCase().includes(searchedPlayerName)
+                playerNotTriedList.some((p) =>
+                  validatePlayerName(p.name).includes(searchedPlayerName)
                 ) && (
                   <List
                     sx={{
@@ -147,9 +132,11 @@ export const HomePage = () => {
                       },
                     }}
                   >
-                    {brasileiraoPlayerList
+                    {playerNotTriedList
                       .filter((player) =>
-                        player.name.toLowerCase().includes(searchedPlayerName)
+                        validatePlayerName(player.name).includes(
+                          searchedPlayerName
+                        )
                       )
                       .map((player) => (
                         <PlayerCard

@@ -1,4 +1,4 @@
-import { BrasileiraoTeam } from "../types/types";
+import { IBrasileiraoTeam } from "../types/types";
 
 import athtleticoP from "../assets/escudos/Athletico Paranaense.png";
 import athtleticoG from "../assets/escudos/Atlético Goianiense.png";
@@ -21,7 +21,7 @@ import saopaulo from "../assets/escudos/São Paulo.png";
 import vasco from "../assets/escudos/Vasco da Gama.png";
 import vitoria from "../assets/escudos/Vitória-BA (2).png";
 
-export const brasileiraoTeamsList: BrasileiraoTeam[] = [
+export const brasileiraoTeamsList: IBrasileiraoTeam[] = [
   { name: "Athletico Paranaense", logo: athtleticoP },
   { name: "Atlético Goianiense", logo: athtleticoG },
   { name: "Atlético Mineiro", logo: athtleticoM },

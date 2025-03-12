@@ -1,9 +1,9 @@
 import { Box, MenuItem } from "@mui/material";
-import { BrasileiraoPlayer } from "@/types";
+import { DBrasileiraoPlayer } from "@/types";
 
 interface PlayerCardProps {
-  player: BrasileiraoPlayer;
-  playerToMatch?: BrasileiraoPlayer;
+  player: DBrasileiraoPlayer;
+  playerToMatch?: DBrasileiraoPlayer;
   onClick?: () => void;
 }
 

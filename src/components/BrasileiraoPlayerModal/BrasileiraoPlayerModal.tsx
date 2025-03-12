@@ -1,5 +1,5 @@
 import { BrasileiraoPlayerService } from "@/service";
-import { BrasileiraoPlayer } from "@/types";
+import { DBrasileiraoPlayer } from "@/types";
 import {
   Box,
   Button,
@@ -30,7 +30,7 @@ type FormProps = {
 interface BrasileiraoPlayerModalProps {
   open: boolean;
   onClose: () => void;
-  player?: BrasileiraoPlayer;
+  player?: DBrasileiraoPlayer;
 }
 
 export const BrasileiraoPlayerModal: React.FC<BrasileiraoPlayerModalProps> = ({
@@ -97,7 +97,7 @@ export const BrasileiraoPlayerModal: React.FC<BrasileiraoPlayerModalProps> = ({
   const updateBrasileiraoPlayer = () => {
     const player = {
       ...formValues,
-    } as BrasileiraoPlayer;
+    } as DBrasileiraoPlayer;
     BrasileiraoPlayerService.updateBrasileiraoPlayer(player)
       .then(() => {
         window.alert("Jogador atualizado com sucesso!");
